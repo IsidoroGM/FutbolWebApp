@@ -26,6 +26,8 @@ Object oDashboard is a cWebView
     // do not set the Server property to some DDO because this will affect 
     // constraints in the next view that we navigate to.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    
+    //comentario para probar feature/vista
 
     Set piMaxWidth to 1024
     
