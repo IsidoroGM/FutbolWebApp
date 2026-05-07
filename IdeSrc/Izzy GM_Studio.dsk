@@ -1,0 +1,21 @@
+[Workspace]
+CurrentProject=WebApp.src
+Location=C:\DataFlex Projects\FutbolWebApp\IdeSrc\Izzy GM_Studio.dsk
+CreateNew=3
+[TabWindows]
+GroupCount=1
+HorizontalGroups=1
+[TabGroup0]
+GroupSize=40
+SelectedTab=0
+[Window0]
+Filename=C:\DataFlex Projects\FutbolWebApp\AppSrc\Dashboard.wo
+ViewType=1
+Top=21
+Left=0
+Bottom=660
+Right=1428
+CursorLine=107
+CursorColumn=29
+TabIndex=0
+TabGroup=0
