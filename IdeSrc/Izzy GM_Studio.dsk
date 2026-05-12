@@ -10,12 +10,10 @@ GroupSize=40
 SelectedTab=0
 [Window0]
 Filename=C:\DataFlex Projects\FutbolWebApp\AppSrc\Dashboard.wo
-ViewType=1
+ViewType=102
 Top=21
 Left=0
-Bottom=660
+Bottom=768
 Right=1428
-CursorLine=107
-CursorColumn=29
 TabIndex=0
 TabGroup=0
