@@ -8,6 +8,7 @@ Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebColumnButton.pkg
 Use cWebColumn.pkg
+Use ZoomEntrenador.wo
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
@@ -44,23 +45,40 @@ Object oSelectEntrenador is a cWebView
         Set pbShowHeader to False
         Set piSortColumn to 0
 
-        Object oligaNombre is a cWebColumn
-            Entry_Item liga.Nombre
-            Set psCaption to "liga.Nombre"
-            Set piWidth to 1000
+        Object oentrenadorNombre is a cWebColumn
+            Entry_Item entrenador.Nombre
+            Set psCaption to "entrenador.Nombre"
+            Set piWidth to 400
         End_Object 
 
+        Object oentrenadorApellido is a cWebColumn
+            Entry_Item entrenador.Apellido
+            Set psCaption to "entrenador.Apellido"
+            Set piWidth to 400
+        End_Object 
+
+        Object oentrenadorNacionalidad is a cWebColumn
+            Entry_Item entrenador.Nacionalidad
+            Set psCaption to "entrenador.Nacionalidad"
+            Set piWidth to 400
+        End_Object 
+
+        Object oentrenadorEquipoID is a cWebColumn
+            Entry_Item entrenador.EquipoID
+            Set psCaption to "entrenador.EquipoID"
+            Set piWidth to 200
+        End_Object 
+        
         Object oDetailButton is a cWebColumnButton
             Set psCaption to "btn"
             Set piWidth to 45
             Set pbFixedWidth to True
             Set pbResizable to False
-            Set piListRowSpan to 4
+            Set piListRowSpan to 1
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
+            WebRegisterPath ntNavigateForward oZoomEntrenador
 
             Procedure OnClick
                 Send NavigatePath
@@ -72,29 +90,8 @@ Object oSelectEntrenador is a cWebView
 
         End_Object 
 
-        Object oligaPais is a cWebColumn
-            Entry_Item liga.Pais
-            Set psCaption to "liga.Pais"
-            Set piWidth to 500
-            Set pbNewLine to True
-        End_Object 
-
-        Object oligaEquipos is a cWebColumn
-            Entry_Item liga.Equipos
-            Set psCaption to "liga.Equipos"
-            Set piWidth to 100
-            Set pbNewLine to True
-        End_Object 
-
-        Object oligaEquiposMax is a cWebColumn
-            Entry_Item liga.EquiposMax
-            Set psCaption to "liga.EquiposMax"
-            Set piWidth to 100
-            Set pbNewLine to True
-        End_Object 
-
 // ToDo: Fill in the from-parent child Select view object name for navigate forward
-//        WebRegisterPath ntNavigateForward oSelectView
+        WebRegisterPath ntNavigateForward oZoomEntrenador
 
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
@@ -145,8 +142,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
+            WebRegisterPath ntNavigateForward oZoomEntrenador
 
             Procedure OnClick
                 Send NavigatePath

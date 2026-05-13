@@ -100,7 +100,7 @@ Object oDashboard is a cWebView
                 
             End_Object
     
-            Object oTileJugadir is a cWebHtmlBox
+            Object oTileJugador is a cWebHtmlBox
                 Set pbServerOnClick to True
                 Set piColumnSpan to 6
                 Set piColumnIndex to 6

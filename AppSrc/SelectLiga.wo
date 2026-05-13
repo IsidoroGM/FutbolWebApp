@@ -37,10 +37,28 @@ Object oSelectLiga is a cWebView
         Object oligaNombre is a cWebColumn
             Entry_Item liga.Nombre
             Set psCaption to "liga.Nombre"
-            Set piWidth to 1000
+            Set piWidth to 600
+        End_Object
+
+        Object oligaPais is a cWebColumn
+            Entry_Item liga.Pais
+            Set psCaption to "liga.Pais"
+            Set piWidth to 400
         End_Object 
 
-        Object oDetailButton is a cWebColumnButton
+        Object oligaEquipos is a cWebColumn
+            Entry_Item liga.Equipos
+            Set psCaption to "liga.Equipos"
+            Set piWidth to 600
+        End_Object 
+
+        Object oligaEquiposMax is a cWebColumn
+            Entry_Item liga.EquiposMax
+            Set psCaption to "liga.EquiposMax"
+            Set piWidth to 600
+        End_Object 
+        
+         Object oDetailButton is a cWebColumnButton
             Set psCaption to "btn"
             Set piWidth to 45
             Set pbFixedWidth to True
@@ -50,7 +68,7 @@ Object oSelectLiga is a cWebView
             Set peAlign to alignRight
 
 // ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
+            WebRegisterPath ntNavigateForward oZoomLiga
 
             Procedure OnClick
                 Send NavigatePath
@@ -60,27 +78,6 @@ Object oSelectLiga is a cWebView
                 Move True to NavigateData.bReadOnly
             End_Procedure
 
-        End_Object 
-
-        Object oligaPais is a cWebColumn
-            Entry_Item liga.Pais
-            Set psCaption to "liga.Pais"
-            Set piWidth to 500
-            Set pbNewLine to True
-        End_Object 
-
-        Object oligaEquipos is a cWebColumn
-            Entry_Item liga.Equipos
-            Set psCaption to "liga.Equipos"
-            Set piWidth to 100
-            Set pbNewLine to True
-        End_Object 
-
-        Object oligaEquiposMax is a cWebColumn
-            Entry_Item liga.EquiposMax
-            Set psCaption to "liga.EquiposMax"
-            Set piWidth to 100
-            Set pbNewLine to True
         End_Object 
 
 // ToDo: Fill in the from-parent child Select view object name for navigate forward
