@@ -107,6 +107,39 @@ Object oWebApp is a cWebApp
                                 Send NavigatePath
                         End_Procedure
                     End_Object
+
+                    /*Object oSelectPruebaItem1 is a cWebMenuItem
+                        Set psCaption to "SelectPrueba"
+
+                        WebRegisterPath ntNavigateBegin oSelectPrueba
+
+                        Procedure OnClick
+                            Forward Send OnClick
+                                Send NavigatePath
+                        End_Procedure
+                    End_Object*/
+
+                    Object oSelectJugadorItem2 is a cWebMenuItem
+                        Set psCaption to "SelectJugador"
+
+                        WebRegisterPath ntNavigateBegin oSelectJugador
+
+                        Procedure OnClick
+                            Forward Send OnClick
+                                Send NavigatePath
+                        End_Procedure
+                    End_Object
+
+                    Object oSelectEntrenadorItem2 is a cWebMenuItem
+                        Set psCaption to "SelectEntrenador"
+
+                        WebRegisterPath ntNavigateBegin oSelectEntrenador
+
+                        Procedure OnClick
+                            Forward Send OnClick
+                                Send NavigatePath
+                        End_Procedure
+                    End_Object
                 End_Object
 
                 Object oSignOut_itm is a cWebMenuItem
@@ -188,16 +221,16 @@ Object oWebApp is a cWebApp
     Use WebResourceManager.wo
     
     Use Dashboard.wo
-    Use SelectEntrenador.wo
     Use ZoomEntrenador.wo
     Use SelectEquipo.wo
     Use ZoomEquipo.wo
     Use SelectPosicion.wo
     Use ZoomPosicion.wo
-    Use SelectJugador.wo
-    Use ZoomJugador.wo
     Use SelectLiga.wo
     Use ZoomLiga.wo
+    Use SelectJugador.wo
+    Use ZoomJugador.wo
+    Use SelectEntrenador.wo
     Set phoDefaultView to oDashboard
 
 End_Object
