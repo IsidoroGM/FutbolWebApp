@@ -9,6 +9,8 @@ Use cWebMenuItem.pkg
 Use cWebColumnButton.pkg
 Use cWebColumn.pkg
 
+Use ZoomEquipo.wo
+
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 
@@ -102,35 +104,37 @@ Object oSelectEquipo is a cWebView
 
         End_Object 
 
-        WebRegisterPath ntNavigateForward oSelectEquipo
-
+       // Navegación por fila: al seleccionar un equipo en la lista se abre su vista Zoom.
+        WebRegisterPath ntNavigateForward oZoomEquipo
+        
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
             Get GetNavigateData to NavigateData
-
+        
             Case Begin
                 Case (NavigateData.eNavigateType = nfFromParent)
-
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-                    Send NavigateForward of oSelectEquipo Self
+                    // Venimos desde una vista padre: continuamos el drilldown hacia el Zoom del equipo.
+                    Send NavigateForward of oZoomEquipo Self
                     Case Break
-
+        
                 Case (NavigateData.eNavigateType = nfFromChild)
+                    // Venimos desde un Zoom hijo como búsqueda: se devuelve el equipo seleccionado y se cierra el Select.
                     Send NavigateClose Self
                     Case Break
-
+        
                 Case (NavigateData.eNavigateType = nfFromMain)
+                    // Venimos desde una búsqueda principal: se devuelve el equipo seleccionado y se cierra el Select.
                     Send NavigateClose Self
                     Case Break
-
+        
                 Case Else // must be nfUndefined
-
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-                    Send NavigateForward of oSelectEquipo Self
-
+                    // Entrada directa desde el menú/dashboard: se abre el Zoom del equipo seleccionado.
+                    Send NavigateForward of oZoomEquipo Self
+                    Case Break
+        
             Case End
         End_Procedure
-
+        
         Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
             Move True to NavigateData.bReadOnly
         End_Procedure
@@ -178,11 +182,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
-                
-                // from oZoomEntrenador
-                        WebSet pbRender of oEntrenadorNombre to True
-                
+            
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)

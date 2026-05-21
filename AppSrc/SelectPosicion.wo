@@ -9,6 +9,7 @@ Use cWebMenuItem.pkg
 Use cWebColumnButton.pkg
 Use cWebColumn.pkg
 
+Use ZoomPosicion.wo
 Use cposicionDataDictionary.dd
 
 Object oSelectPosicion is a cWebView
@@ -22,8 +23,8 @@ Object oSelectPosicion is a cWebView
     Object oposicion_DD is a cposicionDataDictionary
     End_Object 
 
-    Set Main_DD To oposicion_DD
-    Set Server  To oposicion_DD
+    Set Main_DD to oposicion_DD
+    Set Server  to oposicion_DD
 
 
     Object oList is a cWebList
@@ -50,6 +51,7 @@ Object oSelectPosicion is a cWebView
             Set peAlign to alignRight
 
 
+            // Navegación desde el botón de detalle hacia el Zoom de Posición.
             WebRegisterPath ntNavigateForward oZoomPosicion
 
             Procedure OnClick
@@ -57,13 +59,15 @@ Object oSelectPosicion is a cWebView
             End_Procedure
 
             Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+                // El botón de detalle abre el registro en modo consulta.
                 Move True to NavigateData.bReadOnly
             End_Procedure
 
         End_Object 
 
 
-        WebRegisterPath ntNavigateForward oSelectJugador
+        // La selección de una fila debe abrir el Zoom de Posición, no otra vista Select.
+        WebRegisterPath ntNavigateForward oZoomPosicion
 
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
@@ -71,28 +75,29 @@ Object oSelectPosicion is a cWebView
 
             Case Begin
                 Case (NavigateData.eNavigateType = nfFromParent)
-
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-                    Send NavigateForward of oSelectPosicion Self
+                    // Si llegamos desde una vista padre, avanzamos al detalle de la posición seleccionada.
+                    Send NavigateForward of oZoomPosicion Self
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromChild)
+                    // Si la vista se usa como selector desde un Zoom hijo, devolvemos el registro seleccionado.
                     Send NavigateClose Self
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromMain)
+                    // Si se usa como búsqueda principal, cerramos devolviendo la selección al invocador.
                     Send NavigateClose Self
                     Case Break
 
                 Case Else // must be nfUndefined
-
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-                    Send NavigateForward of oSelectPosicion Self
-
+                    // Acceso directo al listado: abrir el Zoom de la posición seleccionada.
+                    Send NavigateForward of oZoomPosicion Self
+                    Case Break
             Case End
         End_Procedure
 
         Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+            // La navegación por fila abre el Zoom en modo solo lectura.
             Move True to NavigateData.bReadOnly
         End_Procedure
 
@@ -114,6 +119,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
 
+            // Navegación para crear una nueva posición desde el listado.
             WebRegisterPath ntNavigateForward oZoomPosicion
 
             Procedure OnClick
@@ -121,6 +127,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
             End_Procedure
 
             Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+                // Indicamos al Zoom que debe abrirse preparando un registro nuevo.
                 Move True to NavigateData.bNewRecord
             End_Procedure
 
@@ -133,20 +140,20 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
 
         Case Begin
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down
+                // Entrada desde una vista padre: mantenemos visible el botón de detalle.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
+                // Entrada desde un Zoom hijo: la vista funciona como selector de posición.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a probably a main-file lookup from a Zoom
+                // Entrada como prompt/búsqueda: se oculta el detalle para devolver solo la selección.
                 WebSet pbRender of oDetailButton to False
                 Case Break
 
             Case Else // must be nfUndefined
-                // This may be the start of a drilldown query or this may be used for some kind of custom query.
+                // Entrada directa al listado: permitimos abrir el Zoom desde la fila o el botón.
 
         Case End
 
