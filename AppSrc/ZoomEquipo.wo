@@ -8,6 +8,7 @@ Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebForm.pkg
 
+Use SelectLiga.wo
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 
@@ -24,11 +25,12 @@ Object oZoomEquipo is a cWebView
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
+        Set Constrain_File to liga.File_Number
     End_Object 
 
-    Set Main_DD To oequipo_DD
-    Set Server  To oequipo_DD
+    Set Main_DD to oequipo_DD
+    Set Server  to oequipo_DD
 
 
     Object oWebMainPanel is a cWebPanel
@@ -43,10 +45,11 @@ Object oZoomEquipo is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
+            // Prompt de liga: desde el Zoom de Equipo se abre SelectLiga para escoger la liga padre.
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
+                // Ejecuta la ruta registrada y deja que SelectLiga devuelva la liga seleccionada.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -59,10 +62,11 @@ Object oZoomEquipo is a cWebView
             Set psLabel to "Pais"
             Set pbPromptButton to True
 
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
+            // Prompt de liga: evita navegar a SelectEquipo y abre el selector correcto de ligas.
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
+                // Ejecuta la búsqueda de liga desde este campo padre.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -74,6 +78,7 @@ Object oZoomEquipo is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "Equipos"
         End_Object 
+        
 
         Object oligaEquiposMax is a cWebForm
             Entry_Item liga.EquiposMax
@@ -99,10 +104,11 @@ Object oZoomEquipo is a cWebView
             Set psLabel to "LigaID"
             Set pbPromptButton to True
 
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
+            // Prompt de LigaID: permite seleccionar la liga padre del equipo desde SelectLiga.
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
+                // Al cerrar SelectLiga, la liga seleccionada vuelve a este ZoomEquipo.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -178,30 +184,31 @@ Object oZoomEquipo is a cWebView
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
+        // Tras guardar el equipo, se cierra el Zoom y se vuelve a la vista que lo abrió.
         Send NavigateClose Self
     End_Procedure
 
-    // this will close the view after a delete
     Procedure OnViewDeleted Handle hoDDO
+        // Tras borrar el equipo, se cierra el Zoom y se vuelve a la vista anterior.
         Send NavigateClose Self
     End_Procedure
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
+                // Entrada desde SelectEquipo como búsqueda principal: se muestra el equipo seleccionado.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
+                // Entrada desde una vista padre: el equipo queda condicionado por la liga de origen.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
+                // Entrada desde una vista hija o prompt: este Zoom actúa como destino de retorno.
                 Case Break
 
             Case Else // must be nfUndefined
+                // Entrada directa o personalizada: no requiere redirección adicional.
 
         Case End
 

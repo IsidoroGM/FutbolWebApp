@@ -9,6 +9,8 @@ Use cWebMenuItem.pkg
 Use cWebColumnButton.pkg
 Use cWebColumn.pkg
 
+Use ZoomEquipo.wo
+
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 
@@ -89,7 +91,7 @@ Object oSelectEquipo is a cWebView
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
+            //tarea 
             WebRegisterPath ntNavigateForward oZoomEquipo
 
             Procedure OnClick
@@ -102,36 +104,37 @@ Object oSelectEquipo is a cWebView
 
         End_Object 
 
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-//        WebRegisterPath ntNavigateForward oSelectView
-
+       // Navegación por fila: al seleccionar un equipo en la lista se abre su vista Zoom.
+        WebRegisterPath ntNavigateForward oZoomEquipo
+        
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
             Get GetNavigateData to NavigateData
-
+        
             Case Begin
                 Case (NavigateData.eNavigateType = nfFromParent)
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
+                    // Venimos desde una vista padre: continuamos el drilldown hacia el Zoom del equipo.
+                    Send NavigateForward of oZoomEquipo Self
                     Case Break
-
+        
                 Case (NavigateData.eNavigateType = nfFromChild)
+                    // Venimos desde un Zoom hijo como búsqueda: se devuelve el equipo seleccionado y se cierra el Select.
                     Send NavigateClose Self
                     Case Break
-
+        
                 Case (NavigateData.eNavigateType = nfFromMain)
+                    // Venimos desde una búsqueda principal: se devuelve el equipo seleccionado y se cierra el Select.
                     Send NavigateClose Self
                     Case Break
-
+        
                 Case Else // must be nfUndefined
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
-
+                    // Entrada directa desde el menú/dashboard: se abre el Zoom del equipo seleccionado.
+                    Send NavigateForward of oZoomEquipo Self
+                    Case Break
+        
             Case End
         End_Procedure
-
+        
         Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
             Move True to NavigateData.bReadOnly
         End_Procedure
@@ -154,8 +157,8 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
+
+            WebRegisterPath ntNavigateForward oZoomEquipo
 
             Procedure OnClick
                 Send NavigatePath
@@ -175,10 +178,11 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
         Case Begin
             Case (NavigateData.eNavigateType = nfFromParent)
                 // If from parent, this is a constrained drill down
+                
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
+            
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)

@@ -22,8 +22,8 @@ Object oZoomPosicion is a cWebView
     Object oposicion_DD is a cposicionDataDictionary
     End_Object 
 
-    Set Main_DD To oposicion_DD
-    Set Server  To oposicion_DD
+    Set Main_DD to oposicion_DD
+    Set Server  to oposicion_DD
 
 
     Object oWebMainPanel is a cWebPanel
@@ -92,16 +92,18 @@ Object oZoomPosicion is a cWebView
         Get GetNavigateData to NavigateData
         Get HasRecord of hoDD to bHasRecord
 
-        // let's hide all buttons and then Show the ones we want
+        // Ocultamos todos los botones y mostramos solo los válidos según la navegación actual.
         WebSet pbRender of oEditBtn to False
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
 
         If (NavigateData.bReadOnly) Begin
+            // Si el Zoom llega en modo consulta, solo permitimos pasar a edición.
             WebSet pbRender of oEditBtn to True
         End
         Else Begin
+            // Si el Zoom llega en modo edición o alta, mostramos acciones de mantenimiento.
             WebSet pbRender of oSaveBtn to True
             WebSet pbRender of oCancelChangesBtn to True
             WebSet pbRender of oDeleteBtn to bHasRecord
@@ -109,30 +111,31 @@ Object oZoomPosicion is a cWebView
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
+        // Tras guardar, cerramos el Zoom y volvemos a la vista que lo abrió.
         Send NavigateClose Self
     End_Procedure
 
-    // this will close the view after a delete
     Procedure OnViewDeleted Handle hoDDO
+        // Tras borrar, cerramos el Zoom y regresamos al listado o vista invocadora.
         Send NavigateClose Self
     End_Procedure
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
+                // Entrada desde un Select usado como búsqueda principal.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
+                // Entrada desde el listado SelectPosicion hacia el detalle.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
+                // Entrada desde una vista hija que necesite consultar o seleccionar posición.
                 Case Break
 
             Case Else // must be nfUndefined
+                // Entrada directa al Zoom sin contexto de navegación específico.
 
         Case End
 

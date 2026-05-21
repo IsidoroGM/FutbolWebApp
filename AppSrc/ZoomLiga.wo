@@ -1,6 +1,8 @@
 ﻿// C:\DataFlex Projects\FutbolWebApp\AppSrc\ZoomLiga.wo
 // ZoomLiga
 //
+// Vista de detalle para la entidad Liga.
+// Permite visualizar, crear, editar y eliminar registros de la tabla liga.
 
 Use cWebView.pkg
 Use cWebPanel.pkg
@@ -19,17 +21,21 @@ Object oZoomLiga is a cWebView
     Set Verify_Save_Msg to 0
     Set piMaxWidth to 1024
 
+    // DataDictionary principal de la vista.
+    // Como ZoomLiga solo trabaja con la tabla liga, no necesita DDO_Server.
     Object oliga_DD is a cligaDataDictionary
     End_Object 
 
-    Set Main_DD To oliga_DD
-    Set Server  To oliga_DD
+    Set Main_DD to oliga_DD
+    Set Server  to oliga_DD
 
 
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
         WebSetResponsive piColumnCount rmMobile to 4
 
+        // Campo principal de la liga.
+        // No lleva prompt porque estamos editando directamente el registro actual.
         Object oligaNombre is a cWebForm
             Entry_Item liga.Nombre
             Set piColumnSpan to 12
@@ -38,6 +44,8 @@ Object oZoomLiga is a cWebView
             Set psLabel to "Nombre"
         End_Object 
 
+        // País de la liga.
+        // Campo editable del propio registro de liga.
         Object oligaPais is a cWebForm
             Entry_Item liga.Pais
             Set piColumnSpan to 8
@@ -46,6 +54,8 @@ Object oZoomLiga is a cWebView
             Set psLabel to "Pais"
         End_Object 
 
+        // Número actual de equipos de la liga.
+        // Si este dato se calcula automáticamente, se puede valorar dejarlo como solo lectura.
         Object oligaEquipos is a cWebForm
             Entry_Item liga.Equipos
             Set piColumnSpan to 2
@@ -54,6 +64,7 @@ Object oZoomLiga is a cWebView
             Set psLabel to "Equipos"
         End_Object 
 
+        // Número máximo de equipos permitidos en la liga.
         Object oligaEquiposMax is a cWebForm
             Entry_Item liga.EquiposMax
             Set piColumnSpan to 2
@@ -63,6 +74,7 @@ Object oZoomLiga is a cWebView
         End_Object 
     End_Object 
 
+
     Object oActionGroup is a cWebMenuGroup
 
         Object oSaveBtn is a cWebMenuItem
@@ -70,19 +82,22 @@ Object oZoomLiga is a cWebView
             Set psCaption to "Save"
 
             Procedure OnClick
+                // Guarda los cambios realizados sobre el registro actual.
                 Send Request_Save
             End_Procedure
-
         End_Object 
 
         Object oEditBtn is a cWebMenuItem
             Set psCSSClass to "WebEditMenuItem"
             Set psCaption to "Edit"
+
             Procedure OnClick
+                // Activa el modo edición cuando la vista se abrió en modo solo lectura.
                 Send ChangeEditMode True
+
+                // Recalcula qué botones deben mostrarse.
                 Send SetActionButtons
             End_Procedure
-
         End_Object 
 
         Object oDeleteBtn is a cWebMenuItem
@@ -91,21 +106,23 @@ Object oZoomLiga is a cWebView
             Set peActionDisplay to adMenu
 
             Procedure OnClick
+                // Elimina el registro actual.
                 Send Request_Delete
             End_Procedure
-
         End_Object 
 
         Object oCancelChangesBtn is a cWebMenuItem
             Set psCSSClass to "WebIcon_Refresh"
             Set psCaption to "Clear Changes"
             Set peActionDisplay to adMenu
+
             Procedure OnClick
+                // Recarga el registro desde la base de datos y descarta cambios sin guardar.
                 Send RefreshRecord
             End_Procedure
-
         End_Object 
     End_Object 
+
 
     Procedure SetActionButtons
         tWebNavigateData NavigateData
@@ -116,52 +133,64 @@ Object oZoomLiga is a cWebView
         Get GetNavigateData to NavigateData
         Get HasRecord of hoDD to bHasRecord
 
-        // let's hide all buttons and then Show the ones we want
+        // Ocultamos todos los botones antes de decidir cuáles mostrar.
         WebSet pbRender of oEditBtn to False
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
 
         If (NavigateData.bReadOnly) Begin
+            // En modo solo lectura solo mostramos el botón de editar.
             WebSet pbRender of oEditBtn to True
         End
         Else Begin
+            // En modo edición o creación mostramos guardar y cancelar.
             WebSet pbRender of oSaveBtn to True
             WebSet pbRender of oCancelChangesBtn to True
+
+            // Delete solo aparece si ya hay un registro existente.
             WebSet pbRender of oDeleteBtn to bHasRecord
         End
     End_Procedure
 
+
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
+        // Después de guardar, cerramos ZoomLiga y volvemos a la vista anterior.
         Send NavigateClose Self
     End_Procedure
 
-    // this will close the view after a delete
+
     Procedure OnViewDeleted Handle hoDDO
+        // Después de borrar, cerramos ZoomLiga y volvemos a la vista anterior.
         Send NavigateClose Self
     End_Procedure
+
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
+                // Entrada desde una navegación principal.
+                // Ejemplo: SelectLiga abre ZoomLiga para consultar una liga.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
+                // Entrada desde una vista padre.
+                // Liga suele ser entidad raíz, así que normalmente no aplicamos filtros aquí.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
+                // Entrada desde una vista hija.
+                // Puede ocurrir si otra vista necesita consultar la liga asociada.
                 Case Break
 
             Case Else // must be nfUndefined
-
+                // Entrada sin contexto de navegación definido.
+                // No aplicamos comportamiento especial.
+                Case Break
         Case End
 
+        // Actualizamos la visibilidad de botones según el modo de navegación.
         Send SetActionButtons
-
     End_Procedure
 
-End_Object 
+End_Object

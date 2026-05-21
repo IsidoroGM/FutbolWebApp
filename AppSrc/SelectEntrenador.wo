@@ -17,7 +17,7 @@ Use centrenadorDataDictionary.dd
 Object oSelectEntrenador is a cWebView
     Set psCaption to "SelectEntrenador"
     Set peWebViewStyle to wvsDrilldown
-    Set peViewType to vtSelect
+    //Set peViewType to vtSelectcWebButton
     Set piColumnCount to 12
     Set pbShowCaption to False
     Set piMaxWidth to 1024
@@ -26,15 +26,15 @@ Object oSelectEntrenador is a cWebView
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
     End_Object 
 
     Object oentrenador_DD is a centrenadorDataDictionary
-        Set DDO_Server To oequipo_DD
+        Set DDO_Server to oequipo_DD
     End_Object 
 
-    Set Main_DD To oentrenador_DD
-    Set Server  To oentrenador_DD
+    Set Main_DD to oentrenador_DD
+    Set Server  to oentrenador_DD
 
 
     Object oList is a cWebList
@@ -78,6 +78,7 @@ Object oSelectEntrenador is a cWebView
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
+            // Bot├│n de detalle: abre ZoomEntrenador en modo lectura para revisar el registro seleccionado.
             WebRegisterPath ntNavigateForward oZoomEntrenador
 
             Procedure OnClick
@@ -90,7 +91,8 @@ Object oSelectEntrenador is a cWebView
 
         End_Object 
 
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
+
+        // Navegaci├│n por fila: al seleccionar un entrenador en la lista se abre su vista Zoom.
         WebRegisterPath ntNavigateForward oZoomEntrenador
 
         Procedure OnRowClick String sRowId
@@ -99,23 +101,24 @@ Object oSelectEntrenador is a cWebView
 
             Case Begin
                 Case (NavigateData.eNavigateType = nfFromParent)
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
+                    // Venimos desde una vista padre: continuamos el drilldown hacia el Zoom del entrenador.
+                    Send NavigateForward of oZoomEntrenador Self
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromChild)
+                    // Venimos desde un Zoom hijo como b├║squeda: se devuelve el entrenador seleccionado y se cierra el Select.
                     Send NavigateClose Self
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromMain)
+                    // Venimos desde una b├║squeda principal: se devuelve el entrenador seleccionado y se cierra el Select.
                     Send NavigateClose Self
                     Case Break
 
                 Case Else // must be nfUndefined
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
+                    // Entrada directa desde el men├║/dashboard: se abre el Zoom del entrenador seleccionado.
+                    Send NavigateForward of oZoomEntrenador Self
+                    Case Break
 
             Case End
         End_Procedure
@@ -142,6 +145,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
 
+            // Bot├│n New: abre ZoomEntrenador preparando un nuevo registro.
             WebRegisterPath ntNavigateForward oZoomEntrenador
 
             Procedure OnClick
