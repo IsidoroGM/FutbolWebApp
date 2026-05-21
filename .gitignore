@@ -1,2 +1,5 @@
 IdeSrc/Workspace.loc
 Data/WebAppSession.dat
+# DataFlex IDE local files
+IdeSrc/*.dsk
+IdeSrc/*.mtd
