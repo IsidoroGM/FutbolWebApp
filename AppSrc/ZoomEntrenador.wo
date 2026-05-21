@@ -8,6 +8,9 @@ Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebForm.pkg
 
+Use SelectLiga.wo
+Use SelectEquipo.wo
+
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 Use centrenadorDataDictionary.dd
@@ -25,15 +28,15 @@ Object oZoomEntrenador is a cWebView
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
     End_Object 
 
     Object oentrenador_DD is a centrenadorDataDictionary
-        Set DDO_Server To oequipo_DD
+        Set DDO_Server to oequipo_DD
     End_Object 
 
-    Set Main_DD To oentrenador_DD
-    Set Server  To oentrenador_DD
+    Set Main_DD to oentrenador_DD
+    Set Server  to oentrenador_DD
 
 
     Object oWebMainPanel is a cWebPanel
@@ -48,9 +51,11 @@ Object oZoomEntrenador is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectEntrenador
+            // Prompt de liga: desde el Zoom de Entrenador se abre SelectLiga para escoger la liga padre.
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
+                // Ejecuta la ruta registrada y devuelve la liga seleccionada al cerrar el selector.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -63,9 +68,11 @@ Object oZoomEntrenador is a cWebView
             Set psLabel to "Pais"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectEntrenador
+            // Prompt de liga: evita navegar a SelectEntrenador y abre el selector correcto de ligas.
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
+                // Ejecuta la b├║squeda de liga desde este campo padre.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -94,9 +101,11 @@ Object oZoomEntrenador is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectEntrenador
+            // Prompt de equipo: permite seleccionar el equipo padre del entrenador desde SelectEquipo.
+            WebRegisterPath ntNavigateForward oSelectEquipo
 
             Procedure OnPrompt
+                // Al cerrar SelectEquipo, el equipo seleccionado vuelve a este ZoomEntrenador.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -109,9 +118,11 @@ Object oZoomEntrenador is a cWebView
             Set psLabel to "LigaID"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectEntrenador
+            // Prompt de LigaID: permite seleccionar la liga padre desde SelectLiga.
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
+                // Al cerrar SelectLiga, la liga seleccionada vuelve a este ZoomEntrenador.
                 Send NavigatePath
             End_Procedure
         End_Object 
@@ -148,9 +159,11 @@ Object oZoomEntrenador is a cWebView
             Set psLabel to "EquipoID"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectEntrenador
+            // Prompt de EquipoID: permite seleccionar el equipo padre del entrenador desde SelectEquipo.
+            WebRegisterPath ntNavigateForward oSelectEquipo
 
             Procedure OnPrompt
+                // Ejecuta la ruta registrada y devuelve el equipo seleccionado al Zoom.
                 Send NavigatePath
             End_Procedure
         End_Object 

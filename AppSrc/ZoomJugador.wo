@@ -7,6 +7,9 @@ Use cWebPanel.pkg
 Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebForm.pkg
+Use SelectEquipo.wo
+Use SelectLiga.wo
+Use SelectJugador.wo
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
@@ -48,7 +51,7 @@ Object oZoomJugador is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectJugador
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
                 Send NavigatePath
@@ -61,14 +64,14 @@ Object oZoomJugador is a cWebView
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "Pais"
-            Set pbPromptButton to True
+            /*Set pbPromptButton to True
 
 
-            WebRegisterPath ntNavigateForward oSelectJugador
+            WebRegisterPath ntNavigateForward oSelectLiga
 
             Procedure OnPrompt
                 Send NavigatePath
-            End_Procedure
+            End_Procedure*/
         End_Object 
 
         Object oligaEquipos is a cWebForm
@@ -95,7 +98,7 @@ Object oZoomJugador is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectJugador
+            WebRegisterPath ntNavigateForward oSelectEquipo
 
             Procedure OnPrompt
                 Send NavigatePath
@@ -108,14 +111,14 @@ Object oZoomJugador is a cWebView
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "LigaID"
-            Set pbPromptButton to True
+            /*Set pbPromptButton to True
 
 
             WebRegisterPath ntNavigateForward oSelectJugador
 
             Procedure OnPrompt
                 Send NavigatePath
-            End_Procedure
+            End_Procedure*/
         End_Object 
 
         Object ojugadorNombre is a cWebForm
@@ -148,13 +151,13 @@ Object oZoomJugador is a cWebView
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "EquipoID"
-            Set pbPromptButton to True
+            /*Set pbPromptButton to True
 
-            WebRegisterPath ntNavigateForward oSelectJugador
+            WebRegisterPath ntNavigateForward oSelectEquipo
 
             Procedure OnPrompt
                 Send NavigatePath
-            End_Procedure
+            End_Procedure*/
         End_Object 
     End_Object 
 

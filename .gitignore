@@ -1,2 +1,11 @@
-IdeSrc/Workspace.loc
+# DataFlex runtime/generated files
 Data/WebAppSession.dat
+Data/webappsession.*
+Programs/*.exe
+Programs/*.dbg
+
+# DataFlex IDE/local files
+IdeSrc/*.dsk
+IdeSrc/*.mtd
+IdeSrc/*.loc
+IdeSrc/Workspace.loc
