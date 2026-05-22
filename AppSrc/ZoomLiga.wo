@@ -1,14 +1,14 @@
 ﻿// C:\DataFlex Projects\FutbolWebApp\AppSrc\ZoomLiga.wo
 // ZoomLiga
 //
-// Vista de detalle para la entidad Liga.
-// Permite visualizar, crear, editar y eliminar registros de la tabla liga.
 
 Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebForm.pkg
+
+Use SelectEquipo.wo
 
 Use cligaDataDictionary.dd
 
@@ -99,6 +99,22 @@ Object oZoomLiga is a cWebView
                 Send SetActionButtons
             End_Procedure
         End_Object 
+        
+        //Botón en Zoom liga que muestre los equipos de esa liga
+        Object oVerEquiposBtn is a cWebMenuItem
+            Set psCSSClass to "WebIcon_Search"
+            Set psCaption to "Ver equipos"
+            Set peActionDisplay to adMenu
+        
+            // Navegación padre-hija:
+            // Desde ZoomLiga abrimos SelectEquipo condicionado por la liga actual.
+            WebRegisterPath ntNavigateForward oSelectEquipo
+        
+            Procedure OnClick
+                // Abre el selector/listado de equipos pertenecientes a la liga actual.
+                Send NavigatePath
+            End_Procedure
+        End_Object
 
         Object oDeleteBtn is a cWebMenuItem
             Set psCSSClass to "WebDeleteMenuItem"
@@ -138,19 +154,22 @@ Object oZoomLiga is a cWebView
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
+        WebSet pbRender of oVerEquiposBtn to False
 
         If (NavigateData.bReadOnly) Begin
-            // En modo solo lectura solo mostramos el botón de editar.
-            WebSet pbRender of oEditBtn to True
+    // En modo solo lectura solo mostramos el botón de editar.
+    WebSet pbRender of oEditBtn to True
         End
         Else Begin
             // En modo edición o creación mostramos guardar y cancelar.
             WebSet pbRender of oSaveBtn to True
             WebSet pbRender of oCancelChangesBtn to True
-
+        
             // Delete solo aparece si ya hay un registro existente.
             WebSet pbRender of oDeleteBtn to bHasRecord
         End
+    // El botón de equipos solo debe aparecer si la liga ya existe.
+        WebSet pbRender of oVerEquiposBtn to bHasRecord
     End_Procedure
 
 
