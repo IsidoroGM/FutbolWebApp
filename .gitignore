@@ -1,7 +1,7 @@
 # DataFlex runtime/generated files
-Data/WebAppSession.dat
-Data/webappsession.*
-Programs/*.exe
+
+
+
 Programs/*.dbg
 
 # DataFlex IDE/local files
