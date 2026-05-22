@@ -7,6 +7,7 @@ Use cWebPanel.pkg
 Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebForm.pkg
+Use cWebButton.pkg
 
 Use SelectEquipo.wo
 
@@ -72,104 +73,95 @@ Object oZoomLiga is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "EquiposMax"
         End_Object 
+        
+        Object oBtnVerEquipos is a cWebButton
+            Set psCaption to "Ver equipos"
+            Set piColumnSpan to 3
+            Set piColumnIndex to 0
+            Set pbRender to False
+
+            // Navegación padre-hija:
+            // Desde ZoomLiga abrimos SelectEquipo filtrado por la liga actual.
+            WebRegisterPath ntNavigateForward oSelectEquipo
+
+            Procedure OnClick
+                Send NavigatePath
+            End_Procedure
+        End_Object
     End_Object 
 
 
     Object oActionGroup is a cWebMenuGroup
-
+    
         Object oSaveBtn is a cWebMenuItem
             Set psCSSClass to "WebSaveMenuItem"
             Set psCaption to "Save"
-
+    
             Procedure OnClick
-                // Guarda los cambios realizados sobre el registro actual.
                 Send Request_Save
             End_Procedure
         End_Object 
-
+    
         Object oEditBtn is a cWebMenuItem
             Set psCSSClass to "WebEditMenuItem"
             Set psCaption to "Edit"
-
+    
             Procedure OnClick
-                // Activa el modo edición cuando la vista se abrió en modo solo lectura.
                 Send ChangeEditMode True
-
-                // Recalcula qué botones deben mostrarse.
                 Send SetActionButtons
             End_Procedure
-        End_Object 
-        
-        //Botón en Zoom liga que muestre los equipos de esa liga
-        Object oVerEquiposBtn is a cWebMenuItem
-            Set psCSSClass to "WebIcon_Search"
-            Set psCaption to "Ver equipos"
-            Set peActionDisplay to adMenu
-        
-            // Navegación padre-hija:
-            // Desde ZoomLiga abrimos SelectEquipo condicionado por la liga actual.
-            WebRegisterPath ntNavigateForward oSelectEquipo
-        
-            Procedure OnClick
-                // Abre el selector/listado de equipos pertenecientes a la liga actual.
-                Send NavigatePath
-            End_Procedure
         End_Object
-
+    
         Object oDeleteBtn is a cWebMenuItem
             Set psCSSClass to "WebDeleteMenuItem"
             Set psCaption to "Delete"
             Set peActionDisplay to adMenu
-
+    
             Procedure OnClick
-                // Elimina el registro actual.
                 Send Request_Delete
             End_Procedure
         End_Object 
-
+    
         Object oCancelChangesBtn is a cWebMenuItem
             Set psCSSClass to "WebIcon_Refresh"
             Set psCaption to "Clear Changes"
             Set peActionDisplay to adMenu
-
+    
             Procedure OnClick
-                // Recarga el registro desde la base de datos y descarta cambios sin guardar.
                 Send RefreshRecord
             End_Procedure
         End_Object 
+    
     End_Object 
-
 
     Procedure SetActionButtons
         tWebNavigateData NavigateData
         Boolean bHasRecord
         Handle hoDD
-
+    
         Get Server to hoDD
         Get GetNavigateData to NavigateData
         Get HasRecord of hoDD to bHasRecord
-
-        // Ocultamos todos los botones antes de decidir cuáles mostrar.
+    
         WebSet pbRender of oEditBtn to False
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
-        WebSet pbRender of oVerEquiposBtn to False
-
+        WebSet pbRender of oBtnVerEquipos to False
+    
         If (NavigateData.bReadOnly) Begin
-    // En modo solo lectura solo mostramos el botón de editar.
-    WebSet pbRender of oEditBtn to True
+            WebSet pbRender of oEditBtn to True
+    
+            // Solo mostramos el botón cuando existe una liga cargada.
+            If (bHasRecord) Begin
+                WebSet pbRender of oBtnVerEquipos to True
+            End
         End
         Else Begin
-            // En modo edición o creación mostramos guardar y cancelar.
             WebSet pbRender of oSaveBtn to True
             WebSet pbRender of oCancelChangesBtn to True
-        
-            // Delete solo aparece si ya hay un registro existente.
             WebSet pbRender of oDeleteBtn to bHasRecord
         End
-    // El botón de equipos solo debe aparecer si la liga ya existe.
-        WebSet pbRender of oVerEquiposBtn to bHasRecord
     End_Procedure
 
 
