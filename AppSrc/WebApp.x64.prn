@@ -1,5 +1,5 @@
 Compiling Program: C:\DataFlex Projects\FutbolWebApp\AppSrc\WebApp.src
-Memory Available: 23098589184
+Memory Available: 23978262528
 1>Use AllWebAppClasses.pkg
 Using pre-compiled package ALLWEBAPPCLASSES.PKG
 Including file: AllWebAppClasses.x64.pkd    (C:\Program Files\DataFlex 25.0\Pkg\AllWebAppClasses.x64.pkd)
@@ -127,7 +127,7 @@ Including file: LoginEncryptionKey.inc    (C:\DataFlex Projects\FutbolWebApp\App
 36367>End_Object
 36368>
 36368>Object oWebApp is a cWebApp
-36370>    Set psTheme to "Df_Material"
+36370>    Set psTheme to "Frutiger_Data"
 36371>    Set peAlignView to alignCenter
 36372>    
 36372>    // It is important to set this so that all views will default
@@ -3772,7 +3772,7 @@ Including file: SelectEntrenador.wo    (C:\DataFlex Projects\FutbolWebApp\AppSrc
 39351>Send StartWebApp of oWebApp
 39352>
 Summary
-Memory Available: 23071637504
+Memory Available: 23973965824
 Total Warnings : 0
 Total Errors   : 0
 Total Symbols  : 25692
@@ -3780,6 +3780,6 @@ Total Resources: 0
 Total Commands : 39351
 Total Windows  : 0
 Total Pages    : 0
-Static Data    : 486497
+Static Data    : 486501
 Message area   : 265291
 Total Blocks   : 17442
